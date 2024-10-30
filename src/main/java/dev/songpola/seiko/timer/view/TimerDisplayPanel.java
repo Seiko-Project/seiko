@@ -5,6 +5,7 @@ import javax.swing.*;
 public class TimerDisplayPanel extends JLabel {
     public TimerDisplayPanel(int seconds) {
         setHorizontalAlignment(JLabel.CENTER);
+        setFont(getFont().deriveFont(48f));
         update(seconds);
     }
 
