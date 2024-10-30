@@ -1,32 +1,26 @@
 package dev.songpola.seiko.task.view;
 
+import dev.songpola.seiko.task.model.TaskListModel;
 import dev.songpola.seiko.task.model.TaskModel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class TaskListPanel extends JPanel {
-    private final TaskModel model = new TaskModel();
-    private final JList<String> taskList;
+    private final JList<TaskModel> taskList;
 
-    public TaskListPanel() {
+    public TaskListPanel(TaskListModel model) {
         super(new BorderLayout());
         taskList = new JList<>(model);
+        setup();
+    }
+
+    private void setup() {
+        taskList.setCellRenderer(new TaskListCellRenderer());
         taskList.setFocusable(false);
+        
         var scrollPane = new JScrollPane(taskList);
         add(scrollPane, BorderLayout.CENTER);
-    }
-
-    public void addTask(String task) {
-        model.addTask(task);
-    }
-
-    public void removeTask(int index) {
-        model.removeTask(index);
-    }
-
-    public void markTaskAsCompleted(int index) {
-        model.markTaskAsCompleted(index);
     }
 
     public int getSelectedIndex() {

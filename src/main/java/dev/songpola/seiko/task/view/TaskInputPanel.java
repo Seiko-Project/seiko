@@ -1,49 +1,44 @@
 package dev.songpola.seiko.task.view;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
 public class TaskInputPanel extends JPanel {
-    private final TaskListPanel taskListPanel;
-    private JTextField taskField;
 
-    public TaskInputPanel(TaskListPanel taskListPanel) {
-        this.taskListPanel = taskListPanel;
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        addTaskField();
-        addButtonAddTask();
-        addButtonRemoveTask();
-        addButtonMarkTask();
-    }
+    private final JTextField taskField;
+    private final Consumer<String> onAddTask;
+    private final Runnable onRemoveTask;
+    private final Runnable onMarkTaskAsCompleted;
 
-    private void addTaskField() {
+    public TaskInputPanel(
+        Consumer<String> onAddTask,
+        Runnable onRemoveTask,
+        Runnable onMarkTaskAsCompleted
+    ) {
+        this.onAddTask = onAddTask;
+        this.onRemoveTask = onRemoveTask;
+        this.onMarkTaskAsCompleted = onMarkTaskAsCompleted;
         taskField = new JTextField();
+        setup();
+    }
+
+    private void setup() {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         add(taskField);
+        add(makeButton("Add Task", this::checkTaskField));
+        add(makeButton("Remove Task", e -> onRemoveTask.run()));
+        add(makeButton("Mark as Completed", e -> onMarkTaskAsCompleted.run()));
     }
 
-    private void addButtonAddTask() {
-        add(makeButton("Add Task", e -> {
-            var task = taskField.getText();
-            // TODO: disable button if task is empty
-            if (!task.isEmpty()) {
-                taskListPanel.addTask(task);
-                taskField.setText("");
-            }
-        }));
-    }
-
-    private void addButtonRemoveTask() {
-        add(makeButton("Remove Task", e -> {
-            int selectedIndex = taskListPanel.getSelectedIndex();
-            if (selectedIndex != -1) taskListPanel.removeTask(selectedIndex);
-        }));
-    }
-
-    private void addButtonMarkTask() {
-        add(makeButton("Mark as Completed", e -> {
-            int selectedIndex = taskListPanel.getSelectedIndex();
-            if (selectedIndex != -1) taskListPanel.markTaskAsCompleted(selectedIndex);
-        }));
+    private void checkTaskField(ActionEvent e) {
+        var task = taskField.getText();
+        // TODO: disable button if task is empty
+        if (!task.isEmpty()) {
+            onAddTask.accept(task);
+            taskField.setText("");
+        }
     }
 
     private JButton makeButton(String text, ActionListener callback) {
