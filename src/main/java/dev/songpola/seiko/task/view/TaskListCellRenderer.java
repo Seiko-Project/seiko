@@ -15,8 +15,7 @@ public class TaskListCellRenderer extends JLabel implements ListCellRenderer<Tas
         boolean cellHasFocus
     ) {
         var title = value.getTitle();
-        var completed = value.isCompleted() ? " (completed)" : ""; // TODO: strikethrough text instead
-        setText(title + completed);
+        setText(value.isCompleted() ? strikeThrough(title) : title);
         if (isSelected) {
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
@@ -26,5 +25,9 @@ public class TaskListCellRenderer extends JLabel implements ListCellRenderer<Tas
         }
         setOpaque(true);
         return this;
+    }
+
+    private String strikeThrough(String text) {
+        return "<html><s>" + text + "</s></html>";
     }
 }
