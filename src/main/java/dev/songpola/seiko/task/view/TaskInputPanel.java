@@ -1,16 +1,15 @@
-package dev.songpola.seiko.task;
+package dev.songpola.seiko.task.view;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class TaskInput extends JPanel {
-    private final TaskList taskList;
+public class TaskInputPanel extends JPanel {
+    private final TaskListPanel taskListPanel;
     private JTextField taskField;
 
-    public TaskInput(TaskList taskList) {
+    public TaskInputPanel(TaskListPanel taskListPanel) {
+        this.taskListPanel = taskListPanel;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        this.taskList = taskList;
         addTaskField();
         addButtonAddTask();
         addButtonRemoveTask();
@@ -24,10 +23,10 @@ public class TaskInput extends JPanel {
 
     private void addButtonAddTask() {
         add(makeButton("Add Task", e -> {
-            String task = taskField.getText();
+            var task = taskField.getText();
             // TODO: disable button if task is empty
             if (!task.isEmpty()) {
-                taskList.addTask(task);
+                taskListPanel.addTask(task);
                 taskField.setText("");
             }
         }));
@@ -35,15 +34,15 @@ public class TaskInput extends JPanel {
 
     private void addButtonRemoveTask() {
         add(makeButton("Remove Task", e -> {
-            int selectedIndex = taskList.getSelectedIndex();
-            if (selectedIndex != -1) taskList.removeTask(selectedIndex);
+            int selectedIndex = taskListPanel.getSelectedIndex();
+            if (selectedIndex != -1) taskListPanel.removeTask(selectedIndex);
         }));
     }
 
     private void addButtonMarkTask() {
         add(makeButton("Mark as Completed", e -> {
-            int selectedIndex = taskList.getSelectedIndex();
-            if (selectedIndex != -1) taskList.markTaskAsCompleted(selectedIndex);
+            int selectedIndex = taskListPanel.getSelectedIndex();
+            if (selectedIndex != -1) taskListPanel.markTaskAsCompleted(selectedIndex);
         }));
     }
 

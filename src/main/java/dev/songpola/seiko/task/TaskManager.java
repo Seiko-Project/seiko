@@ -1,10 +1,13 @@
 package dev.songpola.seiko.task;
 
+import dev.songpola.seiko.task.view.TaskInputPanel;
+import dev.songpola.seiko.task.view.TaskListPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class TaskManager extends JPanel {
-    private TaskList taskList;
+    private TaskListPanel taskListPanel;
 
     public TaskManager() {
         super(new BorderLayout());
@@ -15,12 +18,12 @@ public class TaskManager extends JPanel {
     }
 
     private void addTaskList() {
-        taskList = new TaskList();
-        add(taskList, BorderLayout.CENTER);
+        taskListPanel = new TaskListPanel();
+        add(taskListPanel, BorderLayout.CENTER);
     }
 
     private void addTaskInput() {
-        TaskInput taskInput = new TaskInput(taskList);
-        add(taskInput, BorderLayout.SOUTH);
+        var taskInputPanel = new TaskInputPanel(taskListPanel);
+        add(taskInputPanel, BorderLayout.SOUTH);
     }
 }

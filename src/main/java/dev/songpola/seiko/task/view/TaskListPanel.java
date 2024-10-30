@@ -1,19 +1,19 @@
-package dev.songpola.seiko.task;
+package dev.songpola.seiko.task.view;
 
 import dev.songpola.seiko.task.model.TaskModel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class TaskList extends JPanel {
+public class TaskListPanel extends JPanel {
     private final TaskModel model = new TaskModel();
     private final JList<String> taskList;
 
-    public TaskList() {
+    public TaskListPanel() {
         super(new BorderLayout());
         taskList = new JList<>(model);
-        var scrollPane = new JScrollPane(taskList);
         taskList.setFocusable(false);
+        var scrollPane = new JScrollPane(taskList);
         add(scrollPane, BorderLayout.CENTER);
     }
 
