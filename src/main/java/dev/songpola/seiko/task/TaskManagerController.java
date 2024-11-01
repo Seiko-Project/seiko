@@ -34,12 +34,12 @@ public class TaskManagerController extends JPanel {
         model.addTask(new TaskModel(task));
     }
 
-    public void onRemoveTask() {
+    private void onRemoveTask() {
         int selectedIndex = taskListPanel.getSelectedIndex();
         if (selectedIndex != -1) model.removeTaskAt(selectedIndex);
     }
 
-    public void onMarkTaskAsCompleted() {
+    private void onMarkTaskAsCompleted() {
         int selectedIndex = taskListPanel.getSelectedIndex();
         if (selectedIndex != -1) model.markTaskAsCompletedAt(selectedIndex);
     }
