@@ -23,88 +23,23 @@ public class PomodoroTimerController extends JPanel {
     public PomodoroTimerController(TaskListModel taskListModel) {
         this.taskListModel = taskListModel;
         setup();
-        setupTimer();
-        setupDisplayPanel();
-        setupControlPanel();
     }
 
     private void setup() {
         setLayout(new BorderLayout());
-    }
 
-    private void setupTimer() {
         timer = new Timer(1000, e -> this.onUpdateTimer());
         remainingTime = currentState.getDuration();
-    }
 
-    private void setupDisplayPanel() {
         timerDisplayPanel = new TimerDisplayPanel(remainingTime, cycleCount);
         add(timerDisplayPanel, BorderLayout.CENTER);
-    }
 
-    private void setupControlPanel() {
         var controls = new TimerControlPanel(
             (e) -> timer.start(),
             (e) -> timer.stop(),
-            (e) -> {
-                timer.stop();
-                resetTimer();
-            }
+            (e) -> resetTimer()
         );
         add(controls, BorderLayout.SOUTH);
-    }
-
-    private void onTimerEnd() {
-        if (currentState.isBreak()) {
-            // Break is over, time to work
-            startWork();
-            increaseCycle();
-        } else {
-            // Work is over, time for a break
-            startBreak();
-        }
-    }
-
-    private void startWork() {
-        JOptionPane.showMessageDialog(this, "Break over! Time to work.");
-        updateState(PomodoroState.WORK);
-    }
-
-    private void increaseCycle() {
-        if (cycleCount % CYCLES_BEFORE_LONG_BREAK == 0) {
-            cycleCount = 1;
-        } else {
-            cycleCount++;
-        }
-        timerDisplayPanel.updateCycle(cycleCount);
-    }
-
-    private void startBreak() {
-        if (cycleCount % CYCLES_BEFORE_LONG_BREAK == 0) {
-            startLongBreak(); // Long break after some work cycles
-        } else {
-            startShortBreak();
-        }
-    }
-
-    private void startShortBreak() {
-        JOptionPane.showMessageDialog(this, "Short Break Time!");
-        updateState(PomodoroState.SHORT_BREAK);
-    }
-
-    private void startLongBreak() {
-        JOptionPane.showMessageDialog(this, "Long Break Time!");
-        updateState(PomodoroState.LONG_BREAK);
-    }
-
-    private void updateState(PomodoroState newState) {
-        currentState = newState;
-        resetTimer();
-    }
-
-    private void resetTimer() {
-        remainingTime = currentState.getDuration();
-        timerDisplayPanel.updateTime(remainingTime);
     }
 
     private void onUpdateTimer() {
@@ -119,5 +54,50 @@ public class PomodoroTimerController extends JPanel {
             timer.stop();
             onTimerEnd();
         }
+    }
+
+    private void onTimerEnd() {
+        if (currentState.isBreak()) {
+            // Break is over, time to work
+            startWork();
+        } else {
+            // Work is over, time for a break
+            startBreak();
+        }
+    }
+
+    private void startWork() {
+        JOptionPane.showMessageDialog(this, "Break over! Time to work.");
+        updateState(PomodoroState.WORK);
+
+        // Increment cycle count
+        if (cycleCount % CYCLES_BEFORE_LONG_BREAK == 0) {
+            cycleCount = 1;
+        } else {
+            cycleCount++;
+        }
+        timerDisplayPanel.updateCycle(cycleCount);
+    }
+
+    private void startBreak() {
+        if (cycleCount % CYCLES_BEFORE_LONG_BREAK == 0) {
+            // Long break after some work cycles
+            JOptionPane.showMessageDialog(this, "Long Break Time!");
+            updateState(PomodoroState.LONG_BREAK);
+        } else {
+            JOptionPane.showMessageDialog(this, "Short Break Time!");
+            updateState(PomodoroState.SHORT_BREAK);
+        }
+    }
+
+    private void updateState(PomodoroState newState) {
+        currentState = newState;
+        resetTimer();
+    }
+
+    private void resetTimer() {
+        timer.stop();
+        remainingTime = currentState.getDuration();
+        timerDisplayPanel.updateTime(remainingTime);
     }
 }
